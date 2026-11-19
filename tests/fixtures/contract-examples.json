@@ -1,0 +1,86 @@
+{
+  "$comment": "人工会話に基づく構文例。実データとレビューの実在は別途検証する。 / Synthetic examples; evidence and reviews need semantic validation.",
+  "syntheticMessages": [
+    {
+      "id": "msg_demo_01",
+      "author": "user",
+      "provenance": "live",
+      "projectId": "project_demo",
+      "sessionId": "session_demo",
+      "text": "このプロジェクトでは見出し下の説明文を短くして。",
+      "createdAt": "2026-11-19T09:00:00+09:00"
+    }
+  ],
+  "candidateBatch": {
+    "schemaVersion": "0.1",
+    "type": "candidate_batch",
+    "candidates": [
+      {
+        "candidateId": "candidate_demo_01",
+        "key": "copy.verbosity",
+        "value": "見出し下の説明文は短くする。",
+        "scope": {"level": "project", "projectId": "project_demo"},
+        "source": "explicit",
+        "confidence": 1,
+        "evidence": [{"messageId": "msg_demo_01", "quote": "このプロジェクトでは見出し下の説明文を短くして。", "provenance": "live"}],
+        "contradicts": [],
+        "expiresAt": null
+      }
+    ]
+  },
+  "syntheticReviews": [
+    {
+      "id": "review_demo_intent",
+      "candidateId": "candidate_demo_01",
+      "role": "advisor_intent",
+      "verdict": "approve",
+      "evidenceIds": ["msg_demo_01"],
+      "rationale": "本人がプロジェクトの適用範囲と文章方針を明示している。",
+      "goalImpacts": [{"goalId": "goal_short_demo", "effect": "helps", "reason": "今回の文章修正を一貫させる。"}],
+      "requiredChanges": []
+    },
+    {
+      "id": "review_demo_delivery",
+      "candidateId": "candidate_demo_01",
+      "role": "advisor_delivery",
+      "verdict": "approve",
+      "evidenceIds": ["msg_demo_01"],
+      "rationale": "既存の文章編集で対応でき、user全体へ拡張していない。",
+      "goalImpacts": [{"goalId": "goal_short_demo", "effect": "helps", "reason": "Sceneの文章属性で実装できる。"}],
+      "requiredChanges": []
+    }
+  ],
+  "promotionRequest": {
+    "schemaVersion": "0.1",
+    "type": "promotion_request",
+    "candidateId": "candidate_demo_01",
+    "expectedRevision": 0,
+    "goalRevision": 1,
+    "reviewIds": ["review_demo_intent", "review_demo_delivery"],
+    "decisionId": "decision_demo_01",
+    "rationale": "本人の明示指示であり、参謀2役が指定projectの範囲への昇格を支持した。"
+  },
+  "memorySnapshot": {
+    "schemaVersion": "0.1",
+    "type": "memory_snapshot",
+    "revision": 1,
+    "truncated": false,
+    "items": [
+      {
+        "memoryId": "memory_demo_01",
+        "candidateId": "candidate_demo_01",
+        "key": "copy.verbosity",
+        "value": "見出し下の説明文は短くする。",
+        "scope": {"level": "project", "projectId": "project_demo"},
+        "source": "explicit",
+        "confidence": 1,
+        "evidence": [{"messageId": "msg_demo_01", "quote": "このプロジェクトでは見出し下の説明文を短くして。", "provenance": "live"}],
+        "state": "active",
+        "revision": 1,
+        "createdAt": "2026-11-19T09:00:10+09:00",
+        "expiresAt": null,
+        "supersedesId": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:creative-bot-team:contracts:0.1",
+  "$comment": "根拠の実在と権限はサーバーで再検証する。 / Verify evidence and authorization on the server.",
+  "oneOf": [
+    {"$ref": "#/$defs/CandidateBatch"},
+    {"$ref": "#/$defs/PromotionRequest"},
+    {"$ref": "#/$defs/MemorySnapshot"}
+  ],
+  "$defs": {
+    "Id": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$"},
+    "Key": {"enum": ["visual.palette", "visual.density", "copy.verbosity", "layout.hierarchy", "workflow.iteration"]},
+    "Scope": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["level"],
+          "properties": {"level": {"const": "user"}}
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["level", "projectId"],
+          "properties": {"level": {"const": "project"}, "projectId": {"$ref": "#/$defs/Id"}}
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["level", "projectId", "sessionId"],
+          "properties": {
+            "level": {"const": "session"},
+            "projectId": {"$ref": "#/$defs/Id"},
+            "sessionId": {"$ref": "#/$defs/Id"}
+          }
+        }
+      ]
+    },
+    "Evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["messageId", "quote", "provenance"],
+      "properties": {
+        "messageId": {"$ref": "#/$defs/Id"},
+        "quote": {"type": "string", "minLength": 1, "maxLength": 1000},
+        "provenance": {"enum": ["live", "imported"]}
+      }
+    },
+    "Candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidateId", "key", "value", "scope", "source", "confidence", "evidence", "contradicts", "expiresAt"],
+      "properties": {
+        "candidateId": {"$ref": "#/$defs/Id"},
+        "key": {"$ref": "#/$defs/Key"},
+        "value": {"type": "string", "minLength": 1, "maxLength": 500},
+        "scope": {"$ref": "#/$defs/Scope"},
+        "source": {"enum": ["explicit", "inferred"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true, "items": {"$ref": "#/$defs/Evidence"}},
+        "contradicts": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/Id"}},
+        "expiresAt": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "CandidateBatch": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "type", "candidates"],
+      "properties": {
+        "schemaVersion": {"const": "0.1"},
+        "type": {"const": "candidate_batch"},
+        "candidates": {"type": "array", "maxItems": 10, "items": {"$ref": "#/$defs/Candidate"}}
+      }
+    },
+    "PromotionRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "type", "candidateId", "expectedRevision", "goalRevision", "reviewIds", "decisionId", "rationale"],
+      "properties": {
+        "schemaVersion": {"const": "0.1"},
+        "type": {"const": "promotion_request"},
+        "candidateId": {"$ref": "#/$defs/Id"},
+        "expectedRevision": {"type": "integer", "minimum": 0},
+        "goalRevision": {"type": "integer", "minimum": 0},
+        "reviewIds": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/Id"}},
+        "decisionId": {"$ref": "#/$defs/Id"},
+        "rationale": {"type": "string", "minLength": 1, "maxLength": 2000}
+      }
+    },
+    "MemoryEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["memoryId", "candidateId", "key", "value", "scope", "source", "confidence", "evidence", "state", "revision", "createdAt", "expiresAt", "supersedesId"],
+      "properties": {
+        "memoryId": {"$ref": "#/$defs/Id"},
+        "candidateId": {"$ref": "#/$defs/Id"},
+        "key": {"$ref": "#/$defs/Key"},
+        "value": {"type": "string", "minLength": 1, "maxLength": 500},
+        "scope": {"$ref": "#/$defs/Scope"},
+        "source": {"enum": ["explicit", "inferred"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true, "items": {"$ref": "#/$defs/Evidence"}},
+        "state": {"const": "active"},
+        "revision": {"type": "integer", "minimum": 1},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "expiresAt": {"type": ["string", "null"], "format": "date-time"},
+        "supersedesId": {"anyOf": [{"$ref": "#/$defs/Id"}, {"type": "null"}]}
+      }
+    },
+    "MemorySnapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "type", "revision", "truncated", "items"],
+      "properties": {
+        "schemaVersion": {"const": "0.1"},
+        "type": {"const": "memory_snapshot"},
+        "revision": {"type": "integer", "minimum": 0},
+        "truncated": {"type": "boolean"},
+        "items": {"type": "array", "maxItems": 20, "items": {"$ref": "#/$defs/MemoryEntry"}}
+      }
+    }
+  }
+}
