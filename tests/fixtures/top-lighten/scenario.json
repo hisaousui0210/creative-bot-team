@@ -1,0 +1,64 @@
+{
+  "$comment": "実行結果ではなく人工の受入シナリオ。 / Synthetic acceptance scenario, not an execution record.",
+  "scenarioId": "top_lighten_01",
+  "dataOrigin": "synthetic",
+  "projectId": "project_lighten_demo",
+  "sessionId": "session_lighten_demo",
+  "initialSceneRevision": 12,
+  "initialScene": {
+    "version": 1,
+    "canvas": {"width": 1200, "height": 900},
+    "nodes": [
+      {"id": "hero", "kind": "frame", "x": 0, "y": 0, "width": 1200, "height": 760, "props": {"backgroundColor": "#10131A"}},
+      {"id": "title", "kind": "text", "x": 72, "y": 112, "width": 1000, "height": 180, "props": {"text": "作りたいものを、形にする。", "color": "#FFFFFF", "fontSize": 72}},
+      {"id": "description", "kind": "text", "x": 72, "y": 320, "width": 760, "height": 96, "props": {"text": "会話と直接操作でアイデアを育てる制作環境です。", "color": "#CBD5E1", "fontSize": 18}},
+      {"id": "apply", "kind": "button", "x": 72, "y": 480, "width": 240, "height": 56, "props": {"label": "試してみる", "backgroundColor": "#2563EB", "color": "#FFFFFF"}}
+    ]
+  },
+  "userMessage": {
+    "id": "message_lighten_104",
+    "author": "user",
+    "provenance": "live",
+    "text": "なんかトップの印象が重いから、もっと軽快にして",
+    "createdAt": "2026-11-19T12:00:00+09:00"
+  },
+  "expectedCandidateBatch": {
+    "schemaVersion": "0.1",
+    "type": "candidate_batch",
+    "candidates": [
+      {
+        "candidateId": "candidate_lighten_042",
+        "key": "visual.density",
+        "value": "現在のトップ領域を、重い印象から軽快な印象へ調整する",
+        "scope": {"level": "session", "projectId": "project_lighten_demo", "sessionId": "session_lighten_demo"},
+        "source": "explicit",
+        "confidence": 1,
+        "evidence": [{"messageId": "message_lighten_104", "quote": "なんかトップの印象が重いから、もっと軽快にして", "provenance": "live"}],
+        "contradicts": [],
+        "expiresAt": null
+      }
+    ]
+  },
+  "mockDecision": {
+    "dataOrigin": "synthetic",
+    "chosenChanges": ["背景と文字色を組として変更", "見出しサイズを一段下げる", "背景領域の高さを縮める"],
+    "rejectedChanges": ["本文を小さくする", "本文を削る"],
+    "preserveNodeIds": ["apply"],
+    "forbiddenInferences": ["本人全体が白い背景を好む", "本人全体がアニメーションを嫌う"],
+    "note": "このSceneはアニメーション属性を持たないため、過去のCSS例のアニメーション変更は要求しない。"
+  },
+  "proposedMutation": {
+    "expectedRevision": 12,
+    "operations": [
+      {"op": "set_props", "nodeId": "hero", "props": {"backgroundColor": "#F6F8FA"}},
+      {"op": "resize_node", "nodeId": "hero", "width": 1200, "height": 600},
+      {"op": "set_props", "nodeId": "title", "props": {"color": "#1F2937", "fontSize": 56}},
+      {"op": "set_props", "nodeId": "description", "props": {"color": "#4B5563"}}
+    ]
+  },
+  "expectedPreserved": {
+    "descriptionText": "会話と直接操作でアイデアを育てる制作環境です。",
+    "descriptionFontSize": 18,
+    "applyProps": {"label": "試してみる", "backgroundColor": "#2563EB", "color": "#FFFFFF"}
+  }
+}
